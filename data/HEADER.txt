@@ -1,0 +1,18 @@
+WOWPROGRESS.COM DATA EXPORT CONDITIONS
+
+1. The data can be used free of charge.
+
+2. Direct link to WoWProgress.com http://www.wowprogress.com/ must be placed on all pages that use the data.
+   It must be clearly stated that the data comes from WoWProgress.com.
+
+3. The data presented in JSON format, GZIP-compressed.
+
+4. It's recommended to use If-Modified-Since HTTP negotiation on second request and all consequent requests
+   to the same file in order to reduce traffic usage.
+
+Links:
+http://json.org/
+http://www.gzip.org/
+http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.25
+
+
