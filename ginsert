@@ -13,10 +13,10 @@
 # $7 = MySQL HOST
 # $8 = MySQL PORT
 
-echo "Processing file $1"
-echo "Building Mysql table icemelt.guilds"
-echo "Realm Name $2."
-echo "Output saved to $3"
+#echo "Processing file $1"
+#echo "Building Mysql table icemelt.guilds"
+#echo "Realm Name $2."
+#echo "Output saved to $3"
 
 
 sed 's:,:\n:g' $1 |
