@@ -121,7 +121,7 @@ sleep(5)
 #var_dump(realms, '')
 
 index = 0
-bar = progressbar.ProgressBar(maxval=len(realms), widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()]).start()
+bar = progressbar.ProgressBar(maxval=len(realms), widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage(), ' ', progressbar.ETA()]).start()
 for fname in realms:
   # clears out chat spam and makes the output show only at the top of the screen
   bar.update(index)
