@@ -1,0 +1,7 @@
+# this will be able to cross refrance a toon name and pull the guild info for that toon
+
+# SELECT `gid`,`toon_name`,`realm`,`updaded` FROM `chars` WHERE `toon_name` LIKE 'demo'
+
+# the above output should produce a GID which will be pluged into the INDEX below
+
+# SELECT * FROM `guilds` WHERE `index` ="

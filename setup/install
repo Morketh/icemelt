@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "Takes 1 argument MySQL administrator name that is able to install a Database"
+mysql -u $1 icemelt < icemelt_inst.sql
