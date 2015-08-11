@@ -11,6 +11,8 @@
 # our variables we need later
 _LOC_SQL_UPDATES_ = "./data/"
 _FILE_TEMP_RAW_ = "./sql_inserts.tmp"
+
+##################################################################################################
 # _IN_MYSQL_USR_
 # _IN_MYSQL_PASS_
 # _IN_MYSQL_HOST_
@@ -20,6 +22,7 @@ _FILE_TEMP_RAW_ = "./sql_inserts.tmp"
 #
 #
 # import all of our needed functions
+##################################################################################################
 from subprocess import call 
 import os 
 import subprocess
@@ -69,6 +72,9 @@ realms = sorted(realms)
 print "Inililizing.......Icemelt"
 time.sleep(2)
 print "Preparing Winter Gear......"
+time.sleep(4)
+print "Activating Thermo Sensors....... [ OK ]"
+
 # data orginization function pulls a list of file names and orginizes them we should be able to extract a realm name from the file names for icemelt
 
 # data we need to pass to ginsert
@@ -81,6 +87,8 @@ print "Preparing Winter Gear......"
 # $7 = MySQL HOST
 # $8 = MySQL PORT
 # fname will be in the format us_cenarius_tier12_10.json
+
+time.sleep(5)
 
 for fname in realms:
   # clears out chat spam and makes the output show only at the top of the screen
