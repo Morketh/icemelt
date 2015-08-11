@@ -124,12 +124,10 @@ index = 0
 bar = progressbar.ProgressBar(maxval=len(realms), widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()]).start()
 for fname in realms:
   # clears out chat spam and makes the output show only at the top of the screen
-  #os.system("clear")
-  #print "Applying Ice Scraper to: " + fname
   bar.update(index)
   index = index + 1
-  
   rname = fname.split("_")[1].replace('.json', '')
+  
   # we now need to call the ginsert script with the user provided variables
   os.system("./ginsert "+fname+" "+rname+" "+_IN_SQL_FILE_+" "+_IN_MYSQL_USR_+" "+_IN_MYSQL_PASS_+" "+_IN_MYSQL_DB_+" "+_IN_MYSQL_HOST_+" "+_IN_MYSQL_PORT_)
 bar.finish()
