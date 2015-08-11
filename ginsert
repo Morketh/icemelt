@@ -19,17 +19,23 @@ echo "Realm Name $2."
 echo "Output saved to $3"
 
 
-sed 's:,:\n:g' $1 | grep "\"name\":" |  sed 's:\"name\"\:::g' | sed 's:\"::g' | sed 's:\\::g' | awk -f guild_inserts.awk | sed 's:REALM_NAME:'$2':' | tee -a $3 | mysql --user=$4 --password=$5 --host=$7 --port=$8 $6
+sed 's:,:\n:g' $1 |
+grep "\"name\":" |
+sed '{s:\"name\"\:::g; s:\"::g; s:\\::g}' |
+awk -f guild_inserts.awk |
+sed 's:REALM_NAME:'$2':' |
+tee -a $3 |
+mysql --user=$4 --password=$5 --host=$7 --port=$8 $6
 
-# step 1 sed replaces EVERY , with a newline
-# step 2 grep for "name" as we only care about the realm names from this file
-# step 3 strip "name": off the front of the line
-# step 3 strip out the " surounding the guild name
-# step 4 strip out the \'s this causes an error with MySQL (can we escape them?)
-# step 5 pull our AWK script and build SQL statements
-# step 6 replace REALM_NAME with our provided $2 value from user (should be a realm name however we are unable to check)
-# step 7 TEE output appending to file $3
-# step 8 Run MySQL query inline with all provided information
+# step 1 	sed replaces EVERY , with a newline
+# step 2 	grep for "name" as we only care about the realm names from this file
+# step 3.1 	strip "name": off the front of the line
+# step 3.2 	strip out the " surounding the guild name
+# step 3.3 	strip out the \'s this causes an error with MySQL (can we escape them?)
+# step 5 	pull our AWK script and build SQL statements
+# step 6 	replace REALM_NAME with our provided $2 value from user (should be a realm name however we are unable to check)
+# step 7 	TEE output appending to file $3
+# step 8 	Run MySQL query inline with all provided information
 
 
 ## table structure of guilds
