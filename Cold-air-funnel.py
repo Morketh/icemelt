@@ -13,6 +13,7 @@ import os
 import subprocess
 import sys
 import getpass
+import shlex
 from time import sleep
 import progressbar
 
@@ -27,6 +28,12 @@ def ResultIter(cursor, arraysize=50):
             break
         for result in results:
             yield result
+
+subprocess.call('clear')
+print "Welcome: " + getpass.getuser()
+print "Project Icemelt Copyright (C) 2015 Andrew Malone"
+print "Resuming in 5 seconds"
+sleep(5)
 
 _IN_MYSQL_USR_ = raw_input('Database User Name [icemelt]: ')
 if _IN_MYSQL_USR_ == '':
@@ -57,15 +64,20 @@ db = MySQLdb.connect(_IN_MYSQL_HOST_,_IN_MYSQL_USR_,_IN_MYSQL_PASS_,_IN_MYSQL_DB
 cursor = db.cursor()
 cursor.execute("SELECT VERSION()")
 data = cursor.fetchone()
-print "Database version : %s " % data
+print "Database version: %s " % data
 db.close()
 
 print "Activating weather patterns"
+sleep(2)
+
+os.system("clear")
+print "Activating White-Out weather conditions"
+print "Initilizing Torrential Snow Fall Subroutines"
+print "Preparing Multipoint Thermocouple Assemblies"
 
 # main work horse for the weather control system
-# SELECT `realm` FROM `guilds` WHERE `index`=_INDEX_
-# SELECT COUNT(`index`) AS 'indexes' FROM `guilds`;
-# SELECT `guild` FROM `guilds` WHERE `index`=_INDEX_
+# SELECT `index`,`realm`,`guild` FROM `guilds`;
+# SELECT COUNT(`index`) AS 'total' FROM `guilds`;
 
 _REALM_ = "SELECT `index`,`realm`,`guild` FROM `guilds`;"
 _INDEX_TOTAL_ = "SELECT COUNT(`index`) AS 'total' FROM `guilds`;"
@@ -76,7 +88,7 @@ cursor = icemelt.cursor()
 # grab total entries
 cursor.execute(_INDEX_TOTAL_)
 for (total,) in cursor:
-  print "total: "+str(total)
+  print "Total Guilds found: "+str(total)
   bar = progressbar.ProgressBar(maxval=int(total), widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage(), ' ', progressbar.ETA()]).start()
 
 # grab realm data
@@ -85,8 +97,7 @@ cursor.execute(_REALM_)
 for (index,realm,guild) in ResultIter(cursor):
  #print("Guild: "+guild.replace(" ", "_")+" is on realm: "+realm)
  bar.update(index)
- #mysql --user=$4 --password=$5 --host=$6 --port=$7 $8
- os.system("./TorrentialSnowfall.sh "+realm+" "+guild.replace(" ", "_")+" "+str(index)+" "+_IN_MYSQL_USR_+" "+_IN_MYSQL_PASS_+" "+_IN_MYSQL_HOST_+" "+_IN_MYSQL_PORT_+" "+_IN_MYSQL_DB_)
- sleep(1)
+ call(shlex.split("./TorrentialSnowfall.sh "+realm+" "+guild.replace(" ", "_")+" "+str(index)+" "+_IN_MYSQL_USR_+" "+_IN_MYSQL_PASS_+" "+_IN_MYSQL_HOST_+" "+_IN_MYSQL_PORT_+" "+_IN_MYSQL_DB_))
+ #print"./TorrentialSnowfall.sh "+realm+" "+guild.replace(" ", "_")+" "+str(index)+" "+_IN_MYSQL_USR_+" "+_IN_MYSQL_PASS_+" "+_IN_MYSQL_HOST_+" "+_IN_MYSQL_PORT_+" "+_IN_MYSQL_DB_
 cursor.close()
 icemelt.close()
