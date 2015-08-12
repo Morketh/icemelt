@@ -51,10 +51,6 @@ _IN_MYSQL_PORT_ = raw_input('Database Port Number [3306]: ')
 if _IN_MYSQL_PORT_ == '':
         _IN_MYSQL_PORT_ = '3306' #defualt mysql port number
 
-_IN_SQL_FILE_ = raw_input('File for SQL statments [/tmp/icemelt.sql]: ')
-if _IN_SQL_FILE_ == '':
-        _IN_SQL_FILE_ = '/tmp/icemelt.sql' #defualt SQL location
-
 _IN_MYSQL_DB_ = raw_input('MySQL database to use [icemelt]: ')
 if _IN_MYSQL_DB_ == '':
         _IN_MYSQL_DB_ = 'icemelt' #defualt mysql database
@@ -95,9 +91,12 @@ for (total,) in cursor:
 cursor.execute(_REALM_)
 
 for (index,realm,guild) in ResultIter(cursor):
- #print("Guild: "+guild.replace(" ", "_")+" is on realm: "+realm)
  bar.update(index)
+ 
+ # This will call a subprocess and then WAIT for that to finish before activating a new one this way we can make sure data is in the right order and that Blizzard wont lock us out of the page
  call(shlex.split("./TorrentialSnowfall.sh "+realm+" "+guild.replace(" ", "_")+" "+str(index)+" "+_IN_MYSQL_USR_+" "+_IN_MYSQL_PASS_+" "+_IN_MYSQL_HOST_+" "+_IN_MYSQL_PORT_+" "+_IN_MYSQL_DB_))
+ 
  #print"./TorrentialSnowfall.sh "+realm+" "+guild.replace(" ", "_")+" "+str(index)+" "+_IN_MYSQL_USR_+" "+_IN_MYSQL_PASS_+" "+_IN_MYSQL_HOST_+" "+_IN_MYSQL_PORT_+" "+_IN_MYSQL_DB_
+
 cursor.close()
 icemelt.close()
