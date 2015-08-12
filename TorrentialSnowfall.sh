@@ -28,3 +28,5 @@ grep "wow/en/character" |
 sed '{s:<td class="name"><strong><a href="::g; s:</a></strong></td>::g; s:" class=":,:g;s:">:,:g}' |
 awk -F "," '{print $1}' |
 awk -F "/" '{print $5, $6}'
+
+# Above will output Realm Char pair like: misha Feleana
