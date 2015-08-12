@@ -28,11 +28,32 @@ def ResultIter(cursor, arraysize=50):
         for result in results:
             yield result
 
+_IN_MYSQL_USR_ = raw_input('Database User Name [icemelt]: ')
+if _IN_MYSQL_USR_ == '':
+        _IN_MYSQL_USR_ = 'icemelt' #defualt user name
+
+_IN_MYSQL_PASS_ = raw_input('password for '+_IN_MYSQL_USR_+' [icemelt]: ')
+if _IN_MYSQL_PASS_ == '':
+        _IN_MYSQL_PASS_ = 'icemelt' #defualt password
+
+_IN_MYSQL_HOST_ = raw_input('Database Host Name [localhost]: ')
+if _IN_MYSQL_HOST_ == '':
+        _IN_MYSQL_HOST_ = 'localhost' #defualt hostname
+
+_IN_MYSQL_PORT_ = raw_input('Database Port Number [3306]: ')
+if _IN_MYSQL_PORT_ == '':
+        _IN_MYSQL_PORT_ = '3306' #defualt mysql port number
+
+_IN_SQL_FILE_ = raw_input('File for SQL statments [/tmp/icemelt.sql]: ')
+if _IN_SQL_FILE_ == '':
+        _IN_SQL_FILE_ = '/tmp/icemelt.sql' #defualt SQL location
+
+_IN_MYSQL_DB_ = raw_input('MySQL database to use [icemelt]: ')
+if _IN_MYSQL_DB_ == '':
+        _IN_MYSQL_DB_ = 'icemelt' #defualt mysql database
 
 
-
-
-db = MySQLdb.connect("localhost","icemelt","icemelt","icemelt" )
+db = MySQLdb.connect(_IN_MYSQL_HOST_,_IN_MYSQL_USR_,_IN_MYSQL_PASS_,_IN_MYSQL_DB_)
 cursor = db.cursor()
 cursor.execute("SELECT VERSION()")
 data = cursor.fetchone()
@@ -46,16 +67,26 @@ print "Activating weather patterns"
 # SELECT COUNT(`index`) AS 'indexes' FROM `guilds`;
 # SELECT `guild` FROM `guilds` WHERE `index`=_INDEX_
 
-_REALM_ = "SELECT `realm`,`guild` FROM `guilds`;"
-_TOTAL_ = "SELECT COUNT(`index`) AS 'indexes' FROM `guilds`;"
+_REALM_ = "SELECT `index`,`realm`,`guild` FROM `guilds`;"
+_INDEX_TOTAL_ = "SELECT COUNT(`index`) AS 'total' FROM `guilds`;"
 
-icemelt = MySQLdb.connect("localhost","icemelt","icemelt","icemelt")
+icemelt = MySQLdb.connect(_IN_MYSQL_HOST_,_IN_MYSQL_USR_,_IN_MYSQL_PASS_,_IN_MYSQL_DB_)
 cursor = icemelt.cursor()
 
-cursor.execute(_REALM_) # we always start at 1
+# grab total entries
+cursor.execute(_INDEX_TOTAL_)
+for (total,) in cursor:
+  print "total: "+str(total)
+  bar = progressbar.ProgressBar(maxval=int(total), widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage(), ' ', progressbar.ETA()]).start()
 
-for (realm,guild) in ResultIter(cursor):
- print("Guild: "+guild.replace(" ", "_")+" is on realm: "+realm)
- #os.system("./TorrentialSnowfall.sh "+realm+" "+guild.replace(" ", "_"))
+# grab realm data
+cursor.execute(_REALM_)
+
+for (index,realm,guild) in ResultIter(cursor):
+ #print("Guild: "+guild.replace(" ", "_")+" is on realm: "+realm)
+ bar.update(index)
+ #mysql --user=$4 --password=$5 --host=$6 --port=$7 $8
+ os.system("./TorrentialSnowfall.sh "+realm+" "+guild.replace(" ", "_")+" "+str(index)+" "+_IN_MYSQL_USR_+" "+_IN_MYSQL_PASS_+" "+_IN_MYSQL_HOST_+" "+_IN_MYSQL_PORT_+" "+_IN_MYSQL_DB_)
+ sleep(1)
 cursor.close()
 icemelt.close()

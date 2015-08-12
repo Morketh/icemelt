@@ -22,11 +22,17 @@
 # structure of Program:
 # ->Python app to pull from DB and generate a URL (Also grabs MySQL credentials in order to set up the login process)
 # -->Bash program to retrive HTML page and filter data and insert into DB
-
 wget --quiet -O- http://us.battle.net/wow/en/guild/$1/$2/roster |
 grep "wow/en/character" |
 sed '{s:<td class="name"><strong><a href="::g; s:</a></strong></td>::g; s:" class=":,:g;s:">:,:g}' |
 awk -F "," '{print $1}' |
-awk -F "/" '{print $5, $6}'
+awk -F "/" '{print $5, $6}' |
+sed 's: :,:g' |
+awk '{gsub($0,"INSERT INTO `chars` (`gid`, `realm`, `guild`) VALUES (INDEX,"$0");")}' |
+sed 's:INDEX:$3:g' |
+mysql --user=$4 --password=$5 --host=$6 --port=$7 $8
 
 # Above will output Realm Char pair like: misha Feleana
+#
+# Replace the guildname in the output with a MySQL INSERT statement so we can forward the data to MySQL
+# gsub($0,"INSERT INTO `guilds`(`realm`, `guild`) VALUES (\"REALM_NAME\",\""$GUILD_VALUE"\");")
