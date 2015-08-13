@@ -21,6 +21,9 @@
 # structure of Program:
 # ->Python app to pull from DB and generate a URL (Also grabs MySQL credentials in order to set up the login process)
 # -->Bash program to retrive HTML page and filter data and insert into DB
+
+# lets upgrade all of this so we can migrate into Python and step away from this bash-fu
+
 wget --quiet -O- http://us.battle.net/wow/en/guild/$1/$2/roster |
 grep "wow/en/character" |
 sed '{s:<td class="name"><strong><a href="::g; s:</a></strong></td>::g; s:" class=":,:g;s:">:,:g}' |

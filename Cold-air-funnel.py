@@ -5,6 +5,7 @@
 # Purpose: Pulls guilds and realms out of icemelt DB and preps the TorrentialSnowFall script
 #
 # Copyright (C) Andrew Malone 2015
+
 from __future__ import generators    # needs to be at the top of your module
 import MySQLdb
 import os
@@ -16,7 +17,9 @@ import getpass
 import shlex
 from time import sleep
 import progressbar
-
+import urllib2
+from lxml import html
+import requests as requests_new
 #
 # we need to add a group select to mysql calls
 # 
@@ -91,10 +94,34 @@ for (total,) in cursor:
 cursor.execute(_REALM_)
 
 for (index,realm,guild) in ResultIter(cursor):
+ region="eu"
+ url="http://us.battle.net/wow/"+region+"/guild/"+realm+"/"+guild.replace(" ", "_")+"/roster"
+ req = urllib2.Request(url)
  bar.update(index)
- 
+ try:
+     response = urllib2.urlopen(req)
+ except urllib2.HTTPError as e:
+    # print(url,e.code)
+     print(e.code)
+ else:    
+     page = requests_new.get(url)
+     tree = html.fromstring(page.text)
+     print tree
+     charname = tree.xpath('//td[@class="name"]/text()')
+     print charname
  # This will call a subprocess and then WAIT for that to finish before activating a new one this way we can make sure data is in the right order and that Blizzard wont lock us out of the page
- call(shlex.split("./TorrentialSnowfall.sh "+realm+" "+guild.replace(" ", "_")+" "+str(index)+" "+_IN_MYSQL_USR_+" "+_IN_MYSQL_PASS_+" "+_IN_MYSQL_HOST_+" "+_IN_MYSQL_PORT_+" "+_IN_MYSQL_DB_))
+ #call(shlex.split("./TorrentialSnowfall.sh "+realm+" "+guild.replace(" ", "_")+" "+str(index)+" "+_IN_MYSQL_USR_+" "+_IN_MYSQL_PASS_+" "+_IN_MYSQL_HOST_+" "+_IN_MYSQL_PORT_+" "+_IN_MYSQL_DB_))
+ # lets upgrade all of this so we can migrate into Python and step away from this bash-fu
+ #urllib2.urlopen(url).read()
+ #wget --quiet -O- http://us.battle.net/wow/en/guild/$1/$2/roster | 
+ #grep "wow/en/character" |
+ #sed '{s:<td class="name"><strong><a href="::g; s:</a></strong></td>::g; s:" class=":,:g;s:">:,:g}' |
+ #awk -F "," '{print $1}' | 
+ #awk -F "/" '{print $5, $6}' |
+ #sed 's: :,:g' |
+ #awk -F',' '{ print "INSERT INTO `chars` (`gid`, `realm`, `toon_name`) VALUES(INDEX,\"" $1 "\",\"" $2 "\");" }' |
+ #sed "s:INDEX:$3:g" |
+ #mysql --user=$4 --password=$5 --host=$6 --port=$7 $8
  
  #print"./TorrentialSnowfall.sh "+realm+" "+guild.replace(" ", "_")+" "+str(index)+" "+_IN_MYSQL_USR_+" "+_IN_MYSQL_PASS_+" "+_IN_MYSQL_HOST_+" "+_IN_MYSQL_PORT_+" "+_IN_MYSQL_DB_
 
