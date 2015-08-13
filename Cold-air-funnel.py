@@ -101,13 +101,24 @@ for (index,region_id,realm,guild) in ResultIter(cursor):
  try:
      response = urllib2.urlopen(req)
  except urllib2.HTTPError as e:
-     print(url,e.code)
+     sql = "UPDATE `guilds` SET `status`=%s WHERE  `index`=%s"
+     cursor.execute(sql,[e.code,index])
+     icemelt.commit()
+     #print(url,e.code)
      #print(e.code)
  else:    
      soup = BeautifulSoup(response.read())
-     for link in soup.findAll("a"):
-      print(link.get("href"))
-     
+     x = (len(soup.findAll('tr')) - 1)
+     for row in soup.findAll('tr')[1:x]:
+      col = row.findAll('td')
+      name = col[0].getText()
+      level = col[3].getText()
+      _SQL_ = "INSERT INTO `chars` (`gid`, `rid`, `toon_name`, `lvl`, `realm`) VALUES (%s, %s, %s, %s, %s)" 
+      sql_data = [index,region_id,name,level,realm]
+      #print _SQL_ % sql_data
+      cursor.execute(_SQL_,sql_data)
+      icemelt.commit()
+      print "Data Written: %s" % (sql_data)
      #print "Character Name: ", charname
  # This will call a subprocess and then WAIT for that to finish before activating a new one this way we can make sure data is in the right order and that Blizzard wont lock us out of the page
  #call(shlex.split("./TorrentialSnowfall.sh "+realm+" "+guild.replace(" ", "_")+" "+str(index)+" "+_IN_MYSQL_USR_+" "+_IN_MYSQL_PASS_+" "+_IN_MYSQL_HOST_+" "+_IN_MYSQL_PORT_+" "+_IN_MYSQL_DB_))
