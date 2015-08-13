@@ -23,7 +23,7 @@ grep "\"name\":" |
 sed '{s:\"name\"\:::g; s:\"::g; s:\\::g}' |
 awk -f guild_inserts.awk |
 sed 's:REALM_NAME:'$2':' |
-sed 's:"REGION_ID:$$9':' | #replace the REGION_ID with the actual Identifier
+sed 's:REGION_ID:'$9':' | #replace the REGION_ID with the actual Identifier
 tee -a $3 |
 mysql --user=$4 --password=$5 --host=$7 --port=$8 $6
 
