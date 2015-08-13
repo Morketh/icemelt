@@ -78,7 +78,7 @@ print "Preparing Multipoint Thermocouple Assemblies"
 # SELECT `index`,`realm`,`guild` FROM `guilds`;
 # SELECT COUNT(`index`) AS 'total' FROM `guilds`;
 
-_REALM_ = "SELECT `index`,`realm`,`guild` FROM `guilds`;"
+_REALM_ = "SELECT `index`,`region_id`,`realm`,`guild` FROM `guilds`;"
 _INDEX_TOTAL_ = "SELECT COUNT(`index`) AS 'total' FROM `guilds`;"
 
 icemelt = MySQLdb.connect(_IN_MYSQL_HOST_,_IN_MYSQL_USR_,_IN_MYSQL_PASS_,_IN_MYSQL_DB_)
@@ -93,16 +93,15 @@ for (total,) in cursor:
 # grab realm data
 cursor.execute(_REALM_)
 
-for (index,realm,guild) in ResultIter(cursor):
- region="eu"
- url="http://us.battle.net/wow/"+region+"/guild/"+realm+"/"+guild.replace(" ", "_")+"/roster"
+for (index,region_id,realm,guild) in ResultIter(cursor):
+ url="http://us.battle.net/wow/"+region_id+"/guild/"+realm+"/"+guild.replace(" ", "_")+"/roster"
  req = urllib2.Request(url)
  bar.update(index)
  try:
      response = urllib2.urlopen(req)
  except urllib2.HTTPError as e:
-    # print(url,e.code)
-     print(e.code)
+     print(url,e.code)
+     #print(e.code)
  else:    
      page = requests_new.get(url)
      tree = html.fromstring(page.text)
