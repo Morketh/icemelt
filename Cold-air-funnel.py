@@ -18,8 +18,8 @@ import shlex
 from time import sleep
 import progressbar
 import urllib2
-from lxml import html
-import requests as requests_new
+from HTMLParser import HTMLParser as htmlp
+
 #
 # we need to add a group select to mysql calls
 # 
@@ -97,17 +97,16 @@ for (index,region_id,realm,guild) in ResultIter(cursor):
  url="http://us.battle.net/wow/"+region_id+"/guild/"+realm+"/"+guild.replace(" ", "_")+"/roster"
  req = urllib2.Request(url)
  bar.update(index)
+
  try:
      response = urllib2.urlopen(req)
  except urllib2.HTTPError as e:
      print(url,e.code)
      #print(e.code)
  else:    
-     page = requests_new.get(url)
-     tree = html.fromstring(page.text)
-     print tree
-     charname = tree.xpath('//td[@class="name"]/text()')
-     print charname
+     page = response.read()     
+     print htmlp.feed(page)
+     #print "Character Name: ", charname
  # This will call a subprocess and then WAIT for that to finish before activating a new one this way we can make sure data is in the right order and that Blizzard wont lock us out of the page
  #call(shlex.split("./TorrentialSnowfall.sh "+realm+" "+guild.replace(" ", "_")+" "+str(index)+" "+_IN_MYSQL_USR_+" "+_IN_MYSQL_PASS_+" "+_IN_MYSQL_HOST_+" "+_IN_MYSQL_PORT_+" "+_IN_MYSQL_DB_))
  # lets upgrade all of this so we can migrate into Python and step away from this bash-fu
