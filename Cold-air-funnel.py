@@ -18,7 +18,7 @@ import shlex
 from time import sleep
 import progressbar
 import urllib2
-from HTMLParser import HTMLParser as htmlp
+from BeautifulSoup import BeautifulSoup
 
 #
 # we need to add a group select to mysql calls
@@ -104,8 +104,10 @@ for (index,region_id,realm,guild) in ResultIter(cursor):
      print(url,e.code)
      #print(e.code)
  else:    
-     page = response.read()     
-     print htmlp.feed(page)
+     soup = BeautifulSoup(response.read())
+     for link in soup.findAll("a"):
+      print(link.get("href"))
+     
      #print "Character Name: ", charname
  # This will call a subprocess and then WAIT for that to finish before activating a new one this way we can make sure data is in the right order and that Blizzard wont lock us out of the page
  #call(shlex.split("./TorrentialSnowfall.sh "+realm+" "+guild.replace(" ", "_")+" "+str(index)+" "+_IN_MYSQL_USR_+" "+_IN_MYSQL_PASS_+" "+_IN_MYSQL_HOST_+" "+_IN_MYSQL_PORT_+" "+_IN_MYSQL_DB_))
