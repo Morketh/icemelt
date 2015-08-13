@@ -20,18 +20,6 @@ import progressbar
 import urllib2
 from BeautifulSoup import BeautifulSoup
 
-#
-# we need to add a group select to mysql calls
-# 
-def ResultIter(cursor, arraysize=50):
-    'An iterator that uses fetchmany to keep memory usage down'
-    while True:
-        results = cursor.fetchmany(arraysize)
-        if not results:
-            break
-        for result in results:
-            yield result
-
 subprocess.call('clear')
 print "Welcome: " + getpass.getuser()
 print "Project Icemelt Copyright (C) 2015 Andrew Malone"
@@ -78,22 +66,23 @@ print "Preparing Multipoint Thermocouple Assemblies"
 # SELECT `index`,`realm`,`guild` FROM `guilds`;
 # SELECT COUNT(`index`) AS 'total' FROM `guilds`;
 
-_REALM_ = "SELECT `index`,`region_id`,`realm`,`guild` FROM `guilds`;"
-_INDEX_TOTAL_ = "SELECT COUNT(`index`) AS 'total' FROM `guilds`;"
+_REALM_ = "SELECT `index`,`region_id`,`realm`,`guild` FROM `guilds` WHERE `status` IS NULL;"
+_INDEX_TOTAL_ = "SELECT COUNT(`index`) AS 'total' FROM `guilds` WHERE `status` IS NULL;"
 
 icemelt = MySQLdb.connect(_IN_MYSQL_HOST_,_IN_MYSQL_USR_,_IN_MYSQL_PASS_,_IN_MYSQL_DB_)
 cursor = icemelt.cursor()
 
 # grab total entries
 cursor.execute(_INDEX_TOTAL_)
+cursor.fetchone()
 for (total,) in cursor:
-  print "Total Guilds found: "+str(total)
-  bar = progressbar.ProgressBar(maxval=int(total), widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage(), ' ', progressbar.ETA()]).start()
+ print "Total Guilds found: "+str(total)
+ bar = progressbar.ProgressBar(maxval=int(total), widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage(), ' ', progressbar.ETA()]).start()
 
 # grab realm data
 cursor.execute(_REALM_)
 
-for (index,region_id,realm,guild) in ResultIter(cursor):
+for (index,region_id,realm,guild) in cursor:
  url="http://us.battle.net/wow/"+region_id+"/guild/"+realm+"/"+guild.replace(" ", "_")+"/roster"
  req = urllib2.Request(url)
  bar.update(index)
@@ -106,6 +95,9 @@ for (index,region_id,realm,guild) in ResultIter(cursor):
      icemelt.commit()
      #print(url,e.code)
      #print(e.code)
+ except URLError, e:
+     print 'We failed to reach a server.'
+     print 'Reason: ', e.reason
  else:    
      soup = BeautifulSoup(response.read())
      x = (len(soup.findAll('tr')) - 1)
@@ -118,22 +110,6 @@ for (index,region_id,realm,guild) in ResultIter(cursor):
       #print _SQL_ % sql_data
       cursor.execute(_SQL_,sql_data)
       icemelt.commit()
-      print "Data Written: %s" % (sql_data)
-     #print "Character Name: ", charname
- # This will call a subprocess and then WAIT for that to finish before activating a new one this way we can make sure data is in the right order and that Blizzard wont lock us out of the page
- #call(shlex.split("./TorrentialSnowfall.sh "+realm+" "+guild.replace(" ", "_")+" "+str(index)+" "+_IN_MYSQL_USR_+" "+_IN_MYSQL_PASS_+" "+_IN_MYSQL_HOST_+" "+_IN_MYSQL_PORT_+" "+_IN_MYSQL_DB_))
- # lets upgrade all of this so we can migrate into Python and step away from this bash-fu
- #urllib2.urlopen(url).read()
- #wget --quiet -O- http://us.battle.net/wow/en/guild/$1/$2/roster | 
- #grep "wow/en/character" |
- #sed '{s:<td class="name"><strong><a href="::g; s:</a></strong></td>::g; s:" class=":,:g;s:">:,:g}' |
- #awk -F "," '{print $1}' | 
- #awk -F "/" '{print $5, $6}' |
- #sed 's: :,:g' |
- #awk -F',' '{ print "INSERT INTO `chars` (`gid`, `realm`, `toon_name`) VALUES(INDEX,\"" $1 "\",\"" $2 "\");" }' |
- #sed "s:INDEX:$3:g" |
- #mysql --user=$4 --password=$5 --host=$6 --port=$7 $8
- 
  #print"./TorrentialSnowfall.sh "+realm+" "+guild.replace(" ", "_")+" "+str(index)+" "+_IN_MYSQL_USR_+" "+_IN_MYSQL_PASS_+" "+_IN_MYSQL_HOST_+" "+_IN_MYSQL_PORT_+" "+_IN_MYSQL_DB_
 
 cursor.close()
