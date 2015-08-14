@@ -4,8 +4,9 @@
 
 PID=$(ps aux | grep "[C]old-air-funnel.py" | awk '{print $2}')
 
-echo "$(date) Waiting for $PID to die before shutdown." > ice.log
-echo "$(ps aux | grep [m]ysql)" >> ice.log
+#first lets create/wipe ice.log and append all output to it
+echo "$(date) Waiting for $PID to die before shutdown." | tee ice.log
+echo "$(ps aux | grep '[C]old-air-funnel.py')" | tee -a ice.log
 
 while [[ -n $(ps aux | grep "[C]old-air-funnel.py" | awk '{print $2}') ]]
 do
@@ -13,6 +14,6 @@ do
 #	echo $PID
 	true
 done
-echo "$PID died....." >> ice.log
-echo "$(date) System is now halting" >> ice.log
+echo "$PID died....." | tee -a ice.log
+echo "$(date) System is now halting" | tee -a ice.log
 halt
