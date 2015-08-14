@@ -1,5 +1,8 @@
 #!/bin/bash
-PID=$(ps aux | grep [m]ysql | awk '{print $2}')
+
+# This script will search and wait for Cold-air-funnel.py to finish before shutting down
+
+PID=$(ps aux | grep "[C]old-air-funnel.py" | awk '{print $2}')
 
 echo "$(date) Waiting for $PID to die before shutdown." > ice.log
 echo "$(ps aux | grep [m]ysql)" >> ice.log
