@@ -1,3 +1,6 @@
 #!/bin/bash
 echo "Takes 1 argument MySQL administrator name that is able to install a Database"
+
+mysql --user=$1 --password=$2 mysql < create_users.sql
+
 mysql --user=$1 --password=$2 icemelt < icemelt_inst.sql
