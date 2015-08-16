@@ -106,7 +106,6 @@ for (index,region_id,realm,guild) in cursor:
  region_query = "SELECT `name` FROM `regions` WHERE `id` = %s;"
  cursor.execute(region_query,region_id)
  rname = cursor.fetchone()
- print ''.join(rname)
  url="http://us.battle.net/wow/"+''.join(rname)+"/guild/"+realm+"/"+guild.replace(" ", "_")+"/roster"
  req = urllib2.Request(url)
  bar.update(index)
