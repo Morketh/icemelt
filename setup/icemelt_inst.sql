@@ -1,7 +1,7 @@
 -- --------------------------------------------------------
--- Host:                         192.168.1.13
--- Server version:               10.0.21-MariaDB - MariaDB Server
--- Server OS:                    Linux
+-- Host:                         192.168.1.2
+-- Server version:               5.5.44-0+deb7u1-log - (Debian)
+-- Server OS:                    debian-linux-gnu
 -- HeidiSQL Version:             9.3.0.4984
 -- --------------------------------------------------------
 
@@ -20,13 +20,21 @@ USE `icemelt`;
 DROP TABLE IF EXISTS `chars`;
 CREATE TABLE IF NOT EXISTS `chars` (
   `cid` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `gid` int(10) unsigned NOT NULL,
-  `rid` char(2) NOT NULL,
+  `gid` int(11) unsigned DEFAULT NULL,
+  `rid` tinyint(3) unsigned NOT NULL,
   `toon_name` varchar(15) NOT NULL,
-  `lvl` int(11) NOT NULL,
+  `lvl` tinyint(3) unsigned NOT NULL,
   `realm` varchar(256) NOT NULL,
   `updaded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`cid`)
+  `class` varchar(50) DEFAULT NULL,
+  `spec` varchar(50) DEFAULT NULL,
+  `status` smallint(5) unsigned DEFAULT NULL,
+  `fid` tinyint(3) unsigned NOT NULL,
+  PRIMARY KEY (`cid`),
+  KEY `FK_chars_regions` (`rid`),
+  KEY `FK_chars_guilds` (`gid`),
+  CONSTRAINT `FK_chars_guilds` FOREIGN KEY (`gid`) REFERENCES `guilds` (`index`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `FK_chars_regions` FOREIGN KEY (`rid`) REFERENCES `regions` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -35,12 +43,15 @@ CREATE TABLE IF NOT EXISTS `chars` (
 -- Dumping structure for table icemelt.guilds
 DROP TABLE IF EXISTS `guilds`;
 CREATE TABLE IF NOT EXISTS `guilds` (
-  `index` int(11) NOT NULL AUTO_INCREMENT,
-  `region_id` char(2) NOT NULL,
-  `realm` varchar(256) NOT NULL,
+  `index` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `guild` varchar(256) NOT NULL,
+  `region_id` tinyint(3) unsigned NOT NULL,
+  `realm` varchar(256) NOT NULL,
   `status` int(11) DEFAULT NULL,
-  PRIMARY KEY (`index`)
+  `fid` tinyint(1) unsigned NOT NULL COMMENT '1 = Ally 2 = Horde',
+  PRIMARY KEY (`index`),
+  KEY `FK_guilds_regions` (`region_id`),
+  CONSTRAINT `FK_guilds_regions` FOREIGN KEY (`region_id`) REFERENCES `regions` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -49,8 +60,8 @@ CREATE TABLE IF NOT EXISTS `guilds` (
 -- Dumping structure for table icemelt.regions
 DROP TABLE IF EXISTS `regions`;
 CREATE TABLE IF NOT EXISTS `regions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(2) NOT NULL,
+  `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
+  `name` char(2) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
