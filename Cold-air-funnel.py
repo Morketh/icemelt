@@ -132,7 +132,7 @@ for (index,region_id,realm,guild) in cursor:
        elif r.string == "Alliance":
         _F_ID_ = 1
         
-     cursor.execute(sql,[response.getcode(),index,_F_ID_])
+     cursor.execute(sql,[response.getcode(),_F_ID_,index])
      icemelt.commit()
 
      for row in soup.findAll('tr')[1:x]:
