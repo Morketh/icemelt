@@ -33,6 +33,7 @@ import getpass
 from time import sleep
 import glob
 import progressbar
+import MySQLdb
 
 ##################################################################################################
 #
@@ -122,15 +123,37 @@ sleep(5)
 #debug dump of Glob
 #var_dump(realms, '')
 
+# set up mysql connection
+db = MySQLdb.connect(_IN_MYSQL_HOST_,_IN_MYSQL_USR_,_IN_MYSQL_PASS_,_IN_MYSQL_DB_)
+cursor = db.cursor()
+
 index = 0
 bar = progressbar.ProgressBar(maxval=len(realms), widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage(), ' ', progressbar.ETA()]).start()
+SQL = "REPLACE INTO `guilds` (`index`, `guild`, `region_id`, `realm`) VALUES (%s, %s, %s, %s);"
 for fname in realms:
+  fpointer = open(fname)
+  s = fpointer.read()
+  csv = s.split(",")
+  gname = csv[4].split(":")[1].replace("\"","")
+  realm = csv[5].split(":")[2].replace("\\","").split("/")[5]
   # clears out chat spam and makes the output show only at the top of the screen
   bar.update(index)
   index = index + 1
   rname = fname.split("_")[1].replace('.json', '')
   region = fname.split("_")[0].replace('.json', '') #gives us the region ID Name we need this to format URLS
-  region = region.split("/")[-1] # can we possibly ADD an SQL statment to the bash script as a band-aid?
+  region = region.split("/")[-1]
+
+  # we first need to add the Region ID to to the regions table and take the new index and add it to the guilds table
+  cursor.execute("REPLACE INTO `regions` (`name`) VALUES (%s);",region)
+  db.commit()
+  cursor.execute("SELECT `id` FROM `icemelt`.`regions` WHERE `name`=%s;",region)
+  id = cursor.fetchone()  
+  sqldata = [index,gname,id,realm]
+  cursor.execute(SQL,sqldata)
+  print SQL % sqldata
+  db.commit()
   # we now need to call the ginsert script with the user provided variables
-  os.system("./ginsert "+fname+" "+rname+" "+_IN_SQL_FILE_+" "+_IN_MYSQL_USR_+" "+_IN_MYSQL_PASS_+" "+_IN_MYSQL_DB_+" "+_IN_MYSQL_HOST_+" "+_IN_MYSQL_PORT_+" "+region)
+  #os.system("./ginsert "+fname+" "+rname+" "+_IN_SQL_FILE_+" "+_IN_MYSQL_USR_+" "+_IN_MYSQL_PASS_+" "+_IN_MYSQL_DB_+" "+_IN_MYSQL_HOST_+" "+_IN_MYSQL_PORT_+" "+region)
 bar.finish()
+cursor.close()
+db.close()
