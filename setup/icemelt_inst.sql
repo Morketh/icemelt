@@ -44,14 +44,15 @@ CREATE TABLE IF NOT EXISTS `chars` (
 DROP TABLE IF EXISTS `guilds`;
 CREATE TABLE IF NOT EXISTS `guilds` (
   `index` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `guild` varchar(256) NOT NULL,
+  `guild` varchar(64) NOT NULL,
   `region_id` tinyint(3) unsigned NOT NULL,
-  `realm` varchar(256) NOT NULL,
+  `realm` varchar(64) NOT NULL,
   `status` int(11) DEFAULT NULL,
-  `fid` tinyint(1) unsigned NOT NULL COMMENT '1 = Ally 2 = Horde',
+  `fid` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '1 = Ally 2 = Horde',
   PRIMARY KEY (`index`),
+  UNIQUE KEY `Unique_Per_Realm` (`guild`,`realm`),
   KEY `FK_guilds_regions` (`region_id`),
-  CONSTRAINT `FK_guilds_regions` FOREIGN KEY (`region_id`) REFERENCES `regions` (`id`)
+  CONSTRAINT `FK_guilds_regions` FOREIGN KEY (`region_id`) REFERENCES `regions` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -62,7 +63,8 @@ DROP TABLE IF EXISTS `regions`;
 CREATE TABLE IF NOT EXISTS `regions` (
   `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
   `name` char(2) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
