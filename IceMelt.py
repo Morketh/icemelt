@@ -5,6 +5,8 @@
 # 
 # TITLE: IceMelt 
 # 
+# TODO: rebuild this ENTIRE thing with python code >..< Region IDs are numaric now for the rest
+# of the project at this point the main data engine is pretty much broken
 #
 ##################################################################################################
 
@@ -128,7 +130,7 @@ for fname in realms:
   index = index + 1
   rname = fname.split("_")[1].replace('.json', '')
   region = fname.split("_")[0].replace('.json', '') #gives us the region ID Name we need this to format URLS
-  region = region.split("/")[-1]
+  region = region.split("/")[-1] # can we possibly ADD an SQL statment to the bash script as a band-aid?
   # we now need to call the ginsert script with the user provided variables
   os.system("./ginsert "+fname+" "+rname+" "+_IN_SQL_FILE_+" "+_IN_MYSQL_USR_+" "+_IN_MYSQL_PASS_+" "+_IN_MYSQL_DB_+" "+_IN_MYSQL_HOST_+" "+_IN_MYSQL_PORT_+" "+region)
 bar.finish()
