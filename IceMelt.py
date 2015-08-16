@@ -144,13 +144,15 @@ for fname in realms:
   region = region.split("/")[-1]
 
   # we first need to add the Region ID to to the regions table and take the new index and add it to the guilds table
-  cursor.execute("REPLACE INTO `regions` (`name`) VALUES (%s);",region)
+  # INSERT INTO `regions` (`name`) SELECT * FROM (SELECT %s) AS tmp WHERE NOT EXISTS (SELECT `name` FROM `regions` WHERE name = %s) LIMIT 1;
+  # Insert name if it doesnt exist other wise do nothing (let MySQL silently ignore the error instead of dealing with it here)
+  sql = "INSERT INTO `regions` (`name`) SELECT * FROM (SELECT %s) AS tmp WHERE NOT EXISTS (SELECT `name` FROM `regions` WHERE name = %s) LIMIT 1;"
+  cursor.execute(sql,[region,region])
   db.commit()
   cursor.execute("SELECT `id` FROM `icemelt`.`regions` WHERE `name`=%s;",region)
   id = cursor.fetchone()  
-  sqldata = [index,gname,id,realm]
+  sqldata = [index,gname,id[0],realm]
   cursor.execute(SQL,sqldata)
-  print SQL % sqldata
   db.commit()
   # we now need to call the ginsert script with the user provided variables
   #os.system("./ginsert "+fname+" "+rname+" "+_IN_SQL_FILE_+" "+_IN_MYSQL_USR_+" "+_IN_MYSQL_PASS_+" "+_IN_MYSQL_DB_+" "+_IN_MYSQL_HOST_+" "+_IN_MYSQL_PORT_+" "+region)
