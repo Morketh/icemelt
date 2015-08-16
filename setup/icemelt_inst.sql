@@ -40,6 +40,16 @@ CREATE TABLE IF NOT EXISTS `chars` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table icemelt.checksum
+DROP TABLE IF EXISTS `checksum`;
+CREATE TABLE IF NOT EXISTS `checksum` (
+  `table` varchar(20) DEFAULT NULL,
+  `checksum` mediumint(10) unsigned DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='database integraty info';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table icemelt.guilds
 DROP TABLE IF EXISTS `guilds`;
 CREATE TABLE IF NOT EXISTS `guilds` (
