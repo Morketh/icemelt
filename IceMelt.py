@@ -12,7 +12,6 @@
 
 # our variables we need later
 _LOC_SQL_UPDATES_ = "./data/"
-_FILE_TEMP_RAW_ = "./sql_inserts.tmp"
 
 ##################################################################################################
 # _IN_MYSQL_USR_
@@ -34,7 +33,7 @@ from time import sleep
 import glob
 import progressbar
 import MySQLdb
-import ConfigParser
+from ice import config
 
 ##################################################################################################
 #
@@ -73,8 +72,9 @@ sleep(5)
 
 
 # this will delete the file and then touch it so we can write to it later
-os.system('rm -f '+_IN_SQL_FILE_)
-os.system('touch '+_IN_SQL_FILE_)
+if config._IN_SQL_LOGS_:
+ os.system('rm -f '+config._IN_SQL_FILE_)
+ os.system('touch '+config._IN_SQL_FILE_)
 
 #returns a LIST of values
 realms = glob.glob(_LOC_SQL_UPDATES_ + '*.json')
@@ -105,7 +105,7 @@ sleep(5)
 #var_dump(realms, '')
 
 # set up mysql connection
-db = MySQLdb.connect(_IN_MYSQL_HOST_,_IN_MYSQL_USR_,_IN_MYSQL_PASS_,_IN_MYSQL_DB_)
+db = MySQLdb.connect(config._IN_MYSQL_HOST_,config._IN_MYSQL_USR_,config._IN_MYSQL_PASS_,config._IN_MYSQL_DB_)
 cursor = db.cursor()
 
 index = 0

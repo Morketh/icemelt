@@ -26,7 +26,7 @@ import progressbar
 import urllib2
 from BeautifulSoup import BeautifulSoup
 import ConfigParser
-
+from ice import config
 
 subprocess.call('clear')
 print "Welcome: " + getpass.getuser()
@@ -34,14 +34,13 @@ print "Project Icemelt Copyright (C) 2015 Andrew Malone"
 print "Resuming in 5 seconds"
 sleep(5)
 
-# Configuration Import system
-
-db = MySQLdb.connect(_IN_MYSQL_HOST_,_IN_MYSQL_USR_,_IN_MYSQL_PASS_,_IN_MYSQL_DB_)
+db = MySQLdb.connect(config._IN_MYSQL_HOST_,config._IN_MYSQL_USR_,config._IN_MYSQL_PASS_,config._IN_MYSQL_DB_)
 cursor = db.cursor()
 
 cursor.execute("SELECT VERSION()")
 data = cursor.fetchone()
 print "Database version: %s " % data
+sleep(5)
 db.close()
 
 print "Activating weather patterns"
@@ -66,7 +65,7 @@ _INDEX_TOTAL_ = "SELECT COUNT(`index`) AS 'total' FROM `guilds` WHERE `status` I
 
 _BAR_TOTAL_ =  "SELECT COUNT(`index`) AS 'total' FROM `guilds`;"
 
-icemelt = MySQLdb.connect(_IN_MYSQL_HOST_,_IN_MYSQL_USR_,_IN_MYSQL_PASS_,_IN_MYSQL_DB_)
+icemelt = MySQLdb.connect(config._IN_MYSQL_HOST_,config._IN_MYSQL_USR_,config._IN_MYSQL_PASS_,config._IN_MYSQL_DB_)
 cursor = icemelt.cursor()
 
 # grab total entries
