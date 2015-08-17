@@ -34,6 +34,7 @@ from time import sleep
 import glob
 import progressbar
 import MySQLdb
+import ConfigParser
 
 ##################################################################################################
 #
@@ -67,33 +68,13 @@ print "Icemelt copyright (C) 2015 Andrew Malone"
 print "this install script will resume in 5 seconds"
 sleep(5)
 
-_IN_MYSQL_USR_ = raw_input('Database User Name [icemelt]: ')
-if _IN_MYSQL_USR_ == '':
-	_IN_MYSQL_USR_ = 'icemelt' #defualt user name
+# IceMelt config import
+# updating to the config file
 
-_IN_MYSQL_PASS_ = raw_input('password for '+_IN_MYSQL_USR_+' [icemelt]: ')
-if _IN_MYSQL_PASS_ == '':
-        _IN_MYSQL_PASS_ = 'icemelt' #defualt password
-
-_IN_MYSQL_HOST_ = raw_input('Database Host Name [localhost]: ')
-if _IN_MYSQL_HOST_ == '':
-        _IN_MYSQL_HOST_ = 'localhost' #defualt hostname
-
-_IN_MYSQL_PORT_ = raw_input('Database Port Number [3306]: ')
-if _IN_MYSQL_PORT_ == '':
-        _IN_MYSQL_PORT_ = '3306' #defualt mysql port number
-
-_IN_SQL_FILE_ = raw_input('File for SQL statments [/tmp/icemelt.sql]: ')
-if _IN_SQL_FILE_ == '':
-        _IN_SQL_FILE_ = '/tmp/icemelt.sql' #defualt SQL location
 
 # this will delete the file and then touch it so we can write to it later
 os.system('rm -f '+_IN_SQL_FILE_)
 os.system('touch '+_IN_SQL_FILE_)
-
-_IN_MYSQL_DB_ = raw_input('MySQL database to use [icemelt]: ')
-if _IN_MYSQL_DB_ == '':
-        _IN_MYSQL_DB_ = 'icemelt' #defualt mysql database
 
 #returns a LIST of values
 realms = glob.glob(_LOC_SQL_UPDATES_ + '*.json')
@@ -152,10 +133,10 @@ for fname in realms:
   cursor.execute("SELECT `id` FROM `icemelt`.`regions` WHERE `name`=%s;",region)
   id = cursor.fetchone()  
   sqldata = [index,gname,id[0],realm]
+
+  # INSERT data into the Guilds Table 
   cursor.execute(SQL,sqldata)
   db.commit()
-  # we now need to call the ginsert script with the user provided variables
-  #os.system("./ginsert "+fname+" "+rname+" "+_IN_SQL_FILE_+" "+_IN_MYSQL_USR_+" "+_IN_MYSQL_PASS_+" "+_IN_MYSQL_DB_+" "+_IN_MYSQL_HOST_+" "+_IN_MYSQL_PORT_+" "+region)
 bar.finish()
 cursor.close()
 db.close()

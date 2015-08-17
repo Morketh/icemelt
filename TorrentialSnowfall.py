@@ -19,6 +19,7 @@ from time import sleep
 import progressbar
 import urllib2
 from BeautifulSoup import BeautifulSoup
+import ConfigParser
 
 subprocess.call('clear')
 print "Welcome: " + getpass.getuser()
@@ -26,25 +27,7 @@ print "Project Icemelt Copyright (C) 2015 Andrew Malone"
 print "Resuming in 5 seconds"
 sleep(5)
 
-_IN_MYSQL_USR_ = raw_input('Database User Name [icemelt]: ')
-if _IN_MYSQL_USR_ == '':
-        _IN_MYSQL_USR_ = 'icemelt' #defualt user name
-
-_IN_MYSQL_PASS_ = raw_input('password for '+_IN_MYSQL_USR_+' [icemelt]: ')
-if _IN_MYSQL_PASS_ == '':
-        _IN_MYSQL_PASS_ = 'icemelt' #defualt password
-
-_IN_MYSQL_HOST_ = raw_input('Database Host Name [localhost]: ')
-if _IN_MYSQL_HOST_ == '':
-        _IN_MYSQL_HOST_ = 'localhost' #defualt hostname
-
-_IN_MYSQL_PORT_ = raw_input('Database Port Number [3306]: ')
-if _IN_MYSQL_PORT_ == '':
-        _IN_MYSQL_PORT_ = '3306' #defualt mysql port number
-
-_IN_MYSQL_DB_ = raw_input('MySQL database to use [icemelt]: ')
-if _IN_MYSQL_DB_ == '':
-        _IN_MYSQL_DB_ = 'icemelt' #defualt mysql database
+# Configuration Import
 
 print "Activating weather patterns"
 sleep(2)
