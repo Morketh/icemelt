@@ -1,0 +1,18 @@
+So this is the data off each page we want to boil down from our soup.
+Once we strain these out of the page we can drop each one into the Char table that way we can keep track of statistics.
+
+
+<div class="guild">
+<span class="level">
+<div class="under-name color-c10">
+<span class="level"><strong>37</strong></span> 
+<a href="/wow/en/game/race/blood-elf" class="race">Blood Elf</a>
+<a id="profile-info-spec" href="#talents" class="spec tip">Mistweaver</a>
+<a href="javascript:;" class="class">Monk</a>
+<span class="realm tip" id="profile-info-realm" data-battlegroup="Vengeance">
+Garrosh
+</span>
+</div>
+<div class="achievements">
+
+<div class="pet-info"> Three of these

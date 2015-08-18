@@ -5,7 +5,6 @@
 # Copyright (C) Andrew Malone 2015
 #
 
-
 from __future__ import generators    # needs to be at the top of your module
 import MySQLdb
 import os
@@ -16,28 +15,15 @@ import sys
 import getpass
 import shlex
 from time import sleep
-import progressbar
 import urllib2
 from BeautifulSoup import BeautifulSoup
 import ConfigParser
+from ice import config
 
 subprocess.call('clear')
-print "Welcome: " + getpass.getuser()
 print "Project Icemelt Copyright (C) 2015 Andrew Malone"
 
 # Configuration Import
-
-print "Activating weather patterns"
-print "Activating Automated Surface Observation System (ASOS)"
-print "Initilizing Torrential Snow Fall Subroutines"
-print "Preparing Multipoint Thermocouple Assemblies"
-
-db = MySQLdb.connect(config._IN_MYSQL_HOST_,config._IN_MYSQL_USR_,config._IN_MYSQL_PASS_,config._IN_MYSQL_DB_)
-cursor = db.cursor()
-cursor.execute("SELECT VERSION()")
-data = cursor.fetchone()
-print "Database Version Info: %s " % data
-db.close()
 
 # main work horse for the weather control system
 # SELECT `index`,`realm`,`guild` FROM `guilds`;
@@ -48,14 +34,33 @@ db.close()
 # a status of 200 means FOUND and we can just UPDATE data
 # NULL will be used for not processed
 # anything else will be asumed as not found
-_REALM_ = "SELECT `index`,`region_id`,`realm`,`guild` FROM `guilds` WHERE `status` IS NULL;"
-_INDEX_TOTAL_ = "SELECT COUNT(`index`) AS 'total' FROM `guilds` WHERE `status` IS NULL;"
-
-icemelt = MySQLdb.connect(_IN_MYSQL_HOST_,_IN_MYSQL_USR_,_IN_MYSQL_PASS_,_IN_MYSQL_DB_)
+icemelt = MySQLdb.connect(config._IN_MYSQL_HOST_,config._IN_MYSQL_USR_,config._IN_MYSQL_PASS_,config._IN_MYSQL_DB_)
 cursor = icemelt.cursor()
 
+cursor.execute("SELECT * FROM `icemelt`.`realms`")
 # CODE GOES HERE
+for (index,realm) in cursor:
+ url="http://us.battle.net/wow/en/character/%s/%s/simple" % (realm,sys.argv[1])
+ req = urllib2.Request(url)
 
+ try:
+     response = urllib2.urlopen(req)
+ except urllib2.HTTPError as e:
+     if e.code == 503: # we want to track 503's inorder to update those requests later (in the event we get any)
+        sql = "INSERT INTO `chars` (`rid`, `toon_name`, `realm`, `status`) VALUES (5, %s,%s,%s);"
+        sql_data = [sys.argv[1],realm,e.code]
+        cursor.execute(sql,sql_data)
+        icemelt.commit()
+ except urllib2.URLError as e:
+     print 'We failed to reach the server.'
+     print 'Reason: ', e.reason
+ else: # must mean its 200 OK
+     sql = "INSERT INTO `chars` (`rid`, `toon_name`, `realm`) VALUES (5, %s,%s);"
+     sql_data = [sys.argv[1],realm]
+     # out put the INSER sql
+     #print "SQL: "+sql % (sys.argv[1],realm)
+     cursor.execute(sql,sql_data)
+     icemelt.commit()
 
 cursor.close()
 icemelt.close()
