@@ -1,13 +1,10 @@
 #!/usr/bin/python
 ##################################################################################################
 #
-# Copyright (C) 2013 Collective Industries code provided by Andrew Malone  
+# Copyright (C) 2015 Andrew Malone  
 # 
 # TITLE: IceMelt 
 # 
-# TODO: rebuild this ENTIRE thing with python code >..< Region IDs are numaric now for the rest
-# of the project at this point the main data engine is pretty much broken
-#
 ##################################################################################################
 
 # our variables we need later
@@ -66,10 +63,6 @@ print "Welcome: " + getpass.getuser()
 print "Icemelt copyright (C) 2015 Andrew Malone" 
 print "this install script will resume in 5 seconds"
 sleep(5)
-
-# IceMelt config import
-# updating to the config file
-
 
 # this will delete the file and then touch it so we can write to it later
 if config._IN_SQL_LOGS_:

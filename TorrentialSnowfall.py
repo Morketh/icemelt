@@ -1,4 +1,4 @@
-
+#!/usr/bin/python
 #
 # Name: TorrentialSnowfall
 # Purpose: Pulls toon info directly from Blizzard using the icemelt Guild roster
@@ -24,20 +24,15 @@ import ConfigParser
 subprocess.call('clear')
 print "Welcome: " + getpass.getuser()
 print "Project Icemelt Copyright (C) 2015 Andrew Malone"
-print "Resuming in 5 seconds"
-sleep(5)
 
 # Configuration Import
 
 print "Activating weather patterns"
-sleep(2)
-
-os.system("clear")
 print "Activating Automated Surface Observation System (ASOS)"
 print "Initilizing Torrential Snow Fall Subroutines"
 print "Preparing Multipoint Thermocouple Assemblies"
 
-db = MySQLdb.connect(_IN_MYSQL_HOST_,_IN_MYSQL_USR_,_IN_MYSQL_PASS_,_IN_MYSQL_DB_)
+db = MySQLdb.connect(config._IN_MYSQL_HOST_,config._IN_MYSQL_USR_,config._IN_MYSQL_PASS_,config._IN_MYSQL_DB_)
 cursor = db.cursor()
 cursor.execute("SELECT VERSION()")
 data = cursor.fetchone()
@@ -58,3 +53,9 @@ _INDEX_TOTAL_ = "SELECT COUNT(`index`) AS 'total' FROM `guilds` WHERE `status` I
 
 icemelt = MySQLdb.connect(_IN_MYSQL_HOST_,_IN_MYSQL_USR_,_IN_MYSQL_PASS_,_IN_MYSQL_DB_)
 cursor = icemelt.cursor()
+
+# CODE GOES HERE
+
+
+cursor.close()
+icemelt.close()
