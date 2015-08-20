@@ -22,7 +22,7 @@ from ice import config
 
 subprocess.call('clear')
 print "Project Icemelt Copyright (C) 2015 Andrew Malone"
-
+print "Activating Torrential Snow fall subroutines: "+sys.argv[1]
 # Configuration Import
 
 # main work horse for the weather control system
