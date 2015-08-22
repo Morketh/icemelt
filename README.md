@@ -1,3 +1,9 @@
+
+When you sit at a computer you have the entire world at your finger-tips.
+It takes a lot of skill and a lot of practice to strain the HTML Soup.
+With this application we hope to Strain the Soup from sevral pages in order to collect population statistics for Blizzards World of Warcraft.
+
+
 ##INSTALL
 
 you will need to have the module progress bar installed to use this
