@@ -15,9 +15,9 @@ import urllib2
 import MySQLdb
 
 
-
 ## local imports ##
 from ice import config
+from ice import functions as function
 
 ## GLOBALS ##
 API_URL = "https://us.api.battle.net/wow/"
@@ -34,6 +34,9 @@ AH_URL_END = "?locale=en_US&apikey=%s" % (config.STORM_API_KEY)
 
 ## MAIN PROG ##
 
+############################################### init section
+
+cursor = function.MySQL_init()
 
 ## Temporary Global Variables (will be replaed with SQL provided variables)
 REALM = "Misha"
@@ -58,7 +61,7 @@ print "Realms found:"
 for realm in data["realms"]:
 	print realm["name"]
 
-table = PrettyTable(["Auction ID", "Item ID", "Seller", "Seller Realm", "Buy Out Price", "Stack Size"])
+table = PrettyTable(["Auction ID", "Item ID", "Seller", "Seller Realm", "Bid", "Buy Out Price", "Stack Size"])
 
 table.padding_width = 2 # Two spaces between column edges and contents (default is 1)
 
@@ -71,8 +74,22 @@ table.align["Seller Realm"] = "l"
 table.sortby = "Item ID"
 
 ## display a MySQL Console like Table with the AH Data
-## SQL INSERT should also go here 
+
+## SQL INSERT used to add data to the IceMelt DB 
+sql = "INSERT INTO `regions` (`name`) SELECT * FROM (SELECT %s) AS tmp WHERE NOT EXISTS (SELECT `name` FROM `regions` WHERE name = %s) LIMIT 1;"
+
 for entry in data["auctions"]:
-	table.add_row([entry["auc"],entry["item"],entry["owner"],entry["ownerRealm"],entry["buyout"],entry["quantity"]])
+	row = [
+		entry["auc"],
+		entry["item"],
+		entry["owner"],
+		entry["ownerRealm"],
+		entry["bid"],
+		entry["buyout"],
+		entry["quantity"]
+		]
+#	cursor.execute(sql,)
+#	db.commit()
+	table.add_row(row)
 
 print table
