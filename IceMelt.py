@@ -124,8 +124,8 @@ for fname in realms:
   cursor.execute(sql,[region,region])
   db.commit()
   cursor.execute("SELECT `id` FROM `icemelt`.`regions` WHERE `name`=%s;",region)
-  id = cursor.fetchone()  
-  sqldata = [index,gname,id[0],realm]
+  rid = cursor.fetchone()  
+  sqldata = [index,gname,rid[0],realm]
 
   # INSERT data into the Guilds Table 
   cursor.execute(SQL,sqldata)

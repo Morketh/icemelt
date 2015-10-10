@@ -12,8 +12,11 @@ import json
 from prettytable import PrettyTable
 from pprint import pprint
 import urllib2
+import MySQLdb
 
-## local modles ##
+
+
+## local imports ##
 from ice import config
 
 ## GLOBALS ##
@@ -32,17 +35,17 @@ AH_URL_END = "?locale=en_US&apikey=%s" % (config.STORM_API_KEY)
 ## MAIN PROG ##
 
 
-## temp file opener just to reduce data calls to Blizzard ##
-#with open('auctions.json') as data_file:    
-#    data = json.load(data_file)
-
-## WEB API handle
+## Temporary Global Variables (will be replaed with SQL provided variables)
 REALM = "Misha"
 ITEM = "18803"
 
+# Do we have the API key???? if not exit program we need it to do anything with the Auction House
+if not config.STORM_API_KEY:
+	print "No API Key supplied please set up an API key with Blizzard and then add it to config/key.pcf"
+	exit()
+
 # we should grab some data from Blizzard directly with this API call
 files = json.load(urllib2.urlopen(AH_URL+REALM+AH_URL_END))
-print "JSON files:\n%s" % (files)
 for atr in files["files"]:
 	atr["url"]
 	atr["lastModified"]
@@ -50,18 +53,26 @@ for atr in files["files"]:
 # grab actual AH DATA from the Blizzard Web API using the returned atributes from above call
 data = json.load(urllib2.urlopen(atr["url"]))
 
-
-
 print "Parsing AH data"
 print "Realms found:"
 for realm in data["realms"]:
 	print realm["name"]
 
-table = PrettyTable()
+table = PrettyTable(["Auction ID", "Item ID", "Seller", "Seller Realm", "Buy Out Price", "Stack Size"])
+
 table.padding_width = 2 # Two spaces between column edges and contents (default is 1)
 
-for entry in data["auctions"]:
-	table.add_row([entry["auc"],entry["item"],entry["owner"],entry["buyout"],entry["quantity"]])
-	
-print table
+## Align every thing right and then realign Seller Left
+table.align = "r"
+table.align["Seller"] = "l"
+table.align["Seller Realm"] = "l"
 
+## Sort Table 
+table.sortby = "Item ID"
+
+## display a MySQL Console like Table with the AH Data
+## SQL INSERT should also go here 
+for entry in data["auctions"]:
+	table.add_row([entry["auc"],entry["item"],entry["owner"],entry["ownerRealm"],entry["buyout"],entry["quantity"]])
+
+print table
