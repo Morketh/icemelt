@@ -5,9 +5,9 @@
 # 
 # AUTHOR: Andrew Malone 
 #  
-# TITLE: common
+# TITLE: config
 #
-# PURPOSE: common related code for icemelt
+# PURPOSE: configuration related data for icemelt
 #
 #
 ##################################################################################################
@@ -34,6 +34,8 @@ def ConfigSectionMap(section):
             dict1[option] = None
     return dict1
 
+
+
 # Set up config values
 _IN_MYSQL_HOST_ = ConfigSectionMap("IceMeltDB")['host']
 _IN_MYSQL_USR_ = ConfigSectionMap("IceMeltDB")['user']
@@ -44,3 +46,9 @@ _IN_MYSQL_DB_ = ConfigSectionMap("IceMeltDB")['database']
 _IN_SQL_LOGS_ = ConfigSectionMap("SqlLogs")['enabled']
 if _IN_SQL_LOGS_:
  _IN_SQL_FILE_ = ConfigSectionMap("SqlLogs")['path']
+
+# API Key section
+API_KEY_ENABLED = ConfigSectionMap("AHBot")['enabled']
+if API_KEY_ENABLED:
+	API_KEY_FILE = ConfigSectionMap("AHBot")['keyfile']
+	STORM_API_KEY = [line.rstrip('\n') for line in open(API_KEY_FILE)][0]

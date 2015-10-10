@@ -6,12 +6,14 @@ With this application we hope to Strain the Soup from sevral pages in order to c
 
 ##INSTALL
 
-you will need to have the module progress bar installed to use this
+you will need to have a few  modules installed to use this
 
 ```bash
 easy_install progressbar
+easy_install prettytable
 # or
 pip install progressbar
+pip install prettytable
 ```
 
 Pretty simple little program. IceMelt.py is Stage 1 data scraper building a database based off the wowprogress export data
@@ -22,5 +24,6 @@ Stage 3 has not been implimented as of yet how ever future design plans include 
 
 #NOTE:
 
-before running this you should probably set the config/ice.conf settings according to your database envirnmonet.
+before running this you should probably set the config/ice.conf settings according to your database envirnmonet. 
+Also if youd like to use the AHBot scripts you will need to provide your own API Key from Blizzard. https://dev.battle.net/
 later on an installer will set this for you but for right now this is a per user requirment
