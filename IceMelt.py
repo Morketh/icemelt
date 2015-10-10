@@ -30,32 +30,16 @@ from time import sleep
 import glob
 import progressbar
 import MySQLdb
-from ice import config
 
+## local Imports ##
+from ice import config
+from ice import functions as function
 ##################################################################################################
 #
 # New functions
 # TODO: move these to a set of submodules
 #
 ##################################################################################################
-
-def var_dump(var, prefix=''):
-    """
-    You know you're a php developer when the first thing you ask for
-    when learning a new language is 'Where's var_dump?????'
-    """
-    my_type = '[' + var.__class__.__name__ + '(' + str(len(var)) + ')]:'
-    print(prefix, my_type)
-    prefix += '    '
-    for i in var:
-        if type(i) in (list, tuple, dict, set):
-            var_dump(i, prefix)
-        else:
-            if isinstance(var, dict):
-                print(prefix, i, ': (', var[i].__class__.__name__, ') ', var[i])
-            else:
-                print(prefix, '(', i.__class__.__name__, ') ', i)
-
 
 # lets clear our screen and give the user some information 
 subprocess.call('clear') 
@@ -98,7 +82,7 @@ sleep(5)
 #var_dump(realms, '')
 
 # set up mysql connection
-db = MySQLdb.connect(config._IN_MYSQL_HOST_,config._IN_MYSQL_USR_,config._IN_MYSQL_PASS_,config._IN_MYSQL_DB_)
+db = function.MySQL_init()
 cursor = db.cursor()
 
 index = 0

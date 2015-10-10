@@ -36,8 +36,8 @@ AH_URL_END = "?locale=en_US&apikey=%s" % (config.STORM_API_KEY)
 
 ############################################### init section
 
-cursor = function.MySQL_init()
-
+db = function.MySQL_init()
+cursor = db.cursor()
 ## Temporary Global Variables (will be replaed with SQL provided variables)
 REALM = "Misha"
 ITEM = "18803"
@@ -93,3 +93,6 @@ for entry in data["auctions"]:
 	table.add_row(row)
 
 print table
+
+cursor.close()
+db.close()
