@@ -29,9 +29,9 @@ import ConfigParser
 from ice import config
 
 subprocess.call('clear')
-print "Welcome: " + getpass.getuser()
-print "Project Icemelt Copyright (C) 2015 Andrew Malone"
-print "Resuming in 5 seconds"
+print("Welcome: " + getpass.getuser())
+print("Project Icemelt Copyright (C) 2015 Andrew Malone")
+print("Resuming in 5 seconds")
 sleep(5)
 
 db = MySQLdb.connect(config._IN_MYSQL_HOST_,config._IN_MYSQL_USR_,config._IN_MYSQL_PASS_,config._IN_MYSQL_DB_)
@@ -39,17 +39,17 @@ cursor = db.cursor()
 
 cursor.execute("SELECT VERSION()")
 data = cursor.fetchone()
-print "Database version: %s " % data
+print("Database version: %s " % data)
 sleep(5)
 db.close()
 
-print "Activating weather patterns"
+print("Activating weather patterns")
 sleep(2)
 
 os.system("clear")
-print "Activating White-Out weather conditions"
-print "Initilizing Torrential Snow Fall Subroutines"
-print "Preparing Multipoint Thermocouple Assemblies"
+print("Activating White-Out weather conditions")
+print("Initilizing Torrential Snow Fall Subroutines")
+print("Preparing Multipoint Thermocouple Assemblies")
 
 # main work horse for the weather control system
 # SELECT `index`,`realm`,`guild` FROM `guilds`;
@@ -76,11 +76,11 @@ for (total,) in cursor:
  cursor.execute(_INDEX_TOTAL_)
  (index,) = cursor.fetchone()
  if (index,) > 0:
-  print "Total Guilds not Processed: %s out of %s" % (str(index),str(total))
+  print("Total Guilds not Processed: %s out of %s" % (str(index),str(total)))
   bar = progressbar.ProgressBar(maxval=int(total), widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage(), ' ', progressbar.ETA()]).start()
  else:
-  print "All guilds seem to be have been entered into the data base"
-  print "if you would like to UPDATE guild info please use the update tool"
+  print("All guilds seem to be have been entered into the data base")
+  print("if you would like to UPDATE guild info please use the update tool")
 # grab realm data
 cursor.execute(_REALM_)
 
@@ -100,9 +100,9 @@ for (index,region_id,realm,guild) in cursor:
      icemelt.commit()
      #print(url,e.code)
      #print(e.code)
- except urllib2.URLError, e:
-     print 'We failed to reach the server.'
-     print 'Reason: ', e.reason
+ except urllib2.URLError as e:
+     print('We failed to reach the server.')
+     print('Reason: ', e.reason)
  else:
      sql = "UPDATE `icemelt`.`guilds` SET `status`=%s, `fid`=%s WHERE  `index`=%s;"
      soup = BeautifulSoup(response.read())
@@ -133,8 +133,8 @@ _REALM_POPULATION_ = "SELECT COUNT(DISTINCT `cid`) AS 'Total Toons',`realm` FROM
 
 # Provide Guild Found Statistics on finishing up additions to the DB
 
-print " " #new line to get the stats out of the progress bar
-print "Guild statistics:"
+print(" ") #new line to get the stats out of the progress bar
+print("Guild statistics:")
 cursor.execute(_GUILD_STATS_)
 icemelt.commit()
 
@@ -162,7 +162,7 @@ print(separator)
 
 # Provide a Realm population on finishing up additions to the DB
 
-print "Population by Realm:"
+print("Population by Realm:")
 cursor.execute(_REALM_POPULATION_)
 icemelt.commit()
 

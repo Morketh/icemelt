@@ -44,7 +44,7 @@ ITEM = "18803"
 
 # Do we have the API key???? if not exit program we need it to do anything with the Auction House
 if not config.STORM_API_KEY:
-	print "No API Key supplied please set up an API key with Blizzard and then add it to config/key.pcf"
+	print("No API Key supplied please set up an API key with Blizzard and then add it to config/key.pcf")
 	exit()
 
 # we should grab some data from Blizzard directly with this API call

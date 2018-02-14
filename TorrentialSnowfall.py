@@ -21,8 +21,8 @@ import ConfigParser
 from ice import config
 
 subprocess.call('clear')
-print "Project Icemelt Copyright (C) 2015 Andrew Malone"
-print "Activating Torrential Snow fall subroutines: "+sys.argv[1]
+print("Project Icemelt Copyright (C) 2015 Andrew Malone")
+print("Activating Torrential Snow fall subroutines: "+sys.argv[1])
 # Configuration Import
 
 # main work horse for the weather control system
@@ -52,8 +52,8 @@ for (index,realm) in cursor:
         cursor.execute(sql,sql_data)
         icemelt.commit()
  except urllib2.URLError as e:
-     print 'We failed to reach the server.'
-     print 'Reason: ', e.reason
+     print('We failed to reach the server.')
+     print('Reason: ', e.reason)
  else: # must mean its 200 OK
      sql = "INSERT INTO `chars` (`rid`, `toon_name`, `realm`) VALUES (5, %s,%s);"
      sql_data = [sys.argv[1],realm]
