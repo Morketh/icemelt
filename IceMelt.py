@@ -43,9 +43,9 @@ from ice import functions as function
 
 # lets clear our screen and give the user some information 
 subprocess.call('clear') 
-print "Welcome: " + getpass.getuser() 
-print "Icemelt copyright (C) 2015 Andrew Malone" 
-print "this install script will resume in 5 seconds"
+print("Welcome: %s" %  (getpass.getuser() ))
+print("Icemelt copyright (C) 2015 Andrew Malone" )
+print("this install script will resume in 5 seconds")
 sleep(5)
 
 # this will delete the file and then touch it so we can write to it later
@@ -57,11 +57,11 @@ if config._IN_SQL_LOGS_:
 realms = glob.glob(_LOC_SQL_UPDATES_ + '*.json')
 realms = sorted(realms)
 
-print "Inililizing.......Icemelt"
+print("Inililizing.......Icemelt")
 sleep(2)
-print "Preparing Winter Gear......"
+print("Preparing Winter Gear......")
 sleep(4)
-print "Activating Thermo Sensors....... [ OK ]"
+print("Activating Thermo Sensors....... [ OK ]")
 
 # data orginization function pulls a list of file names and orginizes them we should be able to extract a realm name from the file names for icemelt
 
