@@ -59,3 +59,6 @@ target/
 
 # Private config Files
 *.[Pp][Cc][Ff]
+
+# Visual Studio Cache/Options Directory
+.vs/
